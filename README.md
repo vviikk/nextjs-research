@@ -1,44 +1,23 @@
-# Material UI - Next.js example in TypeScript
+# Grocery list
 
-## How to use
+In this test task, we want to check the basic frontend skills of our candidates. You must create an app allowing users to make their grocery lists.
 
-Download the example [or clone the repo](https://github.com/mui/material-ui):
+Here are user stories that should be covered:
 
-<!-- #default-branch-switch -->
+- As a user, I can view my grocery list
+- As a user, I can add, edit and delete items to my grocery list
+- As a user, I can add an amount to each item in the list
+- As a user, I can mark an item as bought. This will cross out the title and mark the checkbox as checked.
 
-```sh
-curl https://codeload.github.com/mui/material-ui/tar.gz/master | tar -xz --strip=2  material-ui-master/examples/material-next-ts
-cd material-next-ts
-```
+Technical requirements:
+For this task, we want to use NextJS as a framework
+Layouts are not strict, but the website should look good on desktop and mobile
+Please use JSON-server (https://www.npmjs.com/package/json-server) and React query (https://tanstack.com/query/latest/docs/react/quick-start) to mock an API integration
+Push your code to the git repo and share a link with the finished project
 
-Install it and run:
+Not required, but it will be a benefit
 
-```sh
-npm install
-npm run dev
-```
-
-or:
-
-<!-- #default-branch-switch -->
-
-[![Edit on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/mui/material-ui/tree/master/examples/material-next-ts)
-
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mui/material-ui/tree/master/examples/material-next-ts)
-
-## The idea behind the example
-
-The project uses [Next.js](https://github.com/vercel/next.js), which is a framework for server-rendered React apps.
-It includes `@mui/material` and its peer dependencies, including [Emotion](https://emotion.sh/docs/introduction), the default style engine in Material UI v5. If you prefer, you can [use styled-components instead](https://mui.com/material-ui/guides/interoperability/#styled-components).
-
-## The link component
-
-The [example folder](https://github.com/mui/material-ui/tree/HEAD/examples/material-next-ts) provides an adapter for the use of [Next.js's Link component](https://nextjs.org/docs/api-reference/next/link) with MUI.
-More information [in the documentation](https://mui.com/material-ui/guides/routing/#next-js).
-
-## What's next?
-
-<!-- #default-branch-switch -->
-
-You now have a working example project.
-You can head back to the documentation and continue by browsing the [templates](https://mui.com/material-ui/getting-started/templates/) section.
+- MUI usage to build layouts
+- Any additional functionality
+- Server-side rendering examples
+- Simple NodeJS server instead of JSON-server
