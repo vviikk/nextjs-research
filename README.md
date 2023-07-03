@@ -1,6 +1,6 @@
 # Grocery list
 
-In this test task, we want to check the basic frontend skills of our candidates. You must create an app allowing users to make their grocery lists.
+Create an app allowing users to make their grocery lists.
 
 Here are user stories that should be covered:
 

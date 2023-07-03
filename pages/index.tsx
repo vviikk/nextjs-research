@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper'
 import { Container, ListSubheader } from '@mui/material'
 import GroceryItem from '../components/GroceryItem'
 import { QueryClient, useQuery } from '@tanstack/react-query'
-import { Grocery } from '../types/Grocery'
+import { Grocery } from '../types'
 
 const fetchGroceries = async (): Promise<Grocery[]> => {
   const response = await fetch('/api/groceries')

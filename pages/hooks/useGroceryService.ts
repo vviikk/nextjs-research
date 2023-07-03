@@ -6,20 +6,20 @@ import {
   useQuery,
   UseQueryResult,
 } from '@tanstack/react-query'
-import GroceryClient from '../services/GroceryService'
-import { Grocery } from '../../types/Grocery'
+import GroceryService from '../services/GroceryService'
+import { Grocery } from '../../types'
 
 const useGroceryService = (): {
-  service: GroceryClient
+  service: GroceryService
   getGroceriesQuery: UseQueryResult<Grocery[], Error>
   createGroceryMutation: UseMutationResult<void, Error, Grocery>
   updateGroceryMutation: UseMutationResult<void, Error, Grocery>
   deleteGroceryMutation: UseMutationResult<void, Error, number>
 } => {
-  const serviceRef = React.useRef<GroceryClient>()
+  const serviceRef = React.useRef<GroceryService>()
 
   if (!serviceRef.current) {
-    serviceRef.current = new GroceryClient()
+    serviceRef.current = new GroceryService()
   }
 
   const service = serviceRef.current

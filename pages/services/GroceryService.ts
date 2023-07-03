@@ -1,4 +1,4 @@
-import { Grocery } from '../../types/Grocery'
+import { Grocery } from '../../types'
 
 class GroceryService {
   async fetchGroceries(): Promise<Grocery[]> {
