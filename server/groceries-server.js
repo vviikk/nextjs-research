@@ -11,7 +11,7 @@ app.use(bodyParser())
 let groceries = [
   { id: 1, name: 'Milk' },
   { id: 2, name: 'Eggs' },
-  { id: 3, name: 'Bread' }
+  { id: 3, name: 'Bread' },
 ]
 let nextId = 4
 

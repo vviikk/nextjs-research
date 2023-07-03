@@ -1,8 +1,12 @@
 import { Grocery } from '../../types'
 
 class GroceryService {
+  private serverUrl: string
+  constructor(serverUrl: string = '/api') {
+    this.serverUrl = serverUrl
+  }
   async fetchGroceries(): Promise<Grocery[]> {
-    const response = await fetch('/api/groceries')
+    const response = await fetch(`${this.serverUrl}/groceries`)
     if (!response.ok) {
       throw new Error('Error fetching groceries')
     }
@@ -10,7 +14,7 @@ class GroceryService {
   }
 
   async createGrocery(grocery: Grocery): Promise<void> {
-    const response = await fetch('/api/groceries', {
+    const response = await fetch(`${this.serverUrl}/groceries`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -25,7 +29,7 @@ class GroceryService {
   async updateGrocery(
     grocery: Partial<Grocery> & Pick<Grocery, 'id'>
   ): Promise<void> {
-    const response = await fetch(`/api/groceries/${grocery.id}`, {
+    const response = await fetch(`${this.serverUrl}/groceries/${grocery.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -46,7 +50,7 @@ class GroceryService {
   }
 
   async deleteGrocery(id: number): Promise<void> {
-    const response = await fetch(`/api/groceries/${id}`, {
+    const response = await fetch(`${this.serverUrl}/groceries/${id}`, {
       method: 'DELETE',
     })
     if (!response.ok) {
