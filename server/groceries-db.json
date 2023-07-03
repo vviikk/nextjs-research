@@ -1,9 +1,9 @@
 {
-	"groceries": [
-		{
-			"id": 1,
-			"name": "Milk",
-			"is_purchased": false
-		}
-	]
+  "groceries": [
+    {
+      "id": 1,
+      "name": "Milk",
+      "is_purchased": false
+    }
+  ]
 }
