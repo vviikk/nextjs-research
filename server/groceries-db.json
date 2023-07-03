@@ -13,7 +13,7 @@
     {
       "id": 3,
       "name": "Bread",
-      "is_purchased": false
+      "is_purchased": true
     }
   ]
 }

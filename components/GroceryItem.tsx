@@ -8,47 +8,49 @@ import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import CommentIcon from '@mui/icons-material/Comment'
 import { Avatar, ListItemAvatar } from '@mui/material'
+import { Grocery } from '../types'
 
 type GrocerytItemProps = {
-  value: number
+  value: Grocery
   checked: number[]
   handleToggle: (value: number) => () => void
 }
 
 const GroceryItem: React.FC<GrocerytItemProps> = ({
-  value,
+  value: grocery,
   checked,
   handleToggle,
 }) => {
-  const labelId = `checkbox-list-label-${value}`
+  const labelId = `checkbox-list-label-${grocery}`
 
   return (
     <ListItem
-      key={value}
+      key={`item-${grocery.id}`}
       secondaryAction={
         <IconButton edge="end" aria-label="comments">
           <CommentIcon />
         </IconButton>
       }
       disablePadding
+      style={{ textDecoration: grocery.is_purchased ? 'line-through' : 'none' }}
     >
-      <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+      <ListItemButton role={undefined} onClick={handleToggle(grocery)} dense>
         <ListItemAvatar>
           <Avatar
-            alt={`Avatar n°${value + 1}`}
+            alt={`Avatar n°${grocery.id + 1}`}
             src={`https://generative-placeholders.glitch.me/image?width=600&height=300&random=${Math.random()}`}
           />
         </ListItemAvatar>
         <ListItemIcon>
           <Checkbox
             edge="start"
-            checked={checked.indexOf(value) !== -1}
+            checked={grocery.is_purchased}
             tabIndex={-1}
             disableRipple
             inputProps={{ 'aria-labelledby': labelId }}
           />
         </ListItemIcon>
-        <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+        <ListItemText id={labelId} primary={grocery.name} />
       </ListItemButton>
     </ListItem>
   )

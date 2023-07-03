@@ -5,6 +5,7 @@ import { Container, ListSubheader } from '@mui/material'
 import GroceryItem from '../components/GroceryItem'
 import { QueryClient, useQuery } from '@tanstack/react-query'
 import { Grocery } from '../types'
+import useGroceryService from './hooks/useGroceryService'
 
 const fetchGroceries = async (): Promise<Grocery[]> => {
   const response = await fetch('/api/groceries')
@@ -15,14 +16,8 @@ const fetchGroceries = async (): Promise<Grocery[]> => {
 }
 
 const GroceryList: React.FC = () => {
-  const {
-    data: groceries,
-    isLoading,
-    isError,
-  } = useQuery<Grocery[], Error>({
-    queryKey: ['groceries'],
-    queryFn: fetchGroceries,
-  })
+  const { getGroceriesQuery } = useGroceryService()
+  const { data: groceries, isLoading, isError } = getGroceriesQuery
   const [checked, setChecked] = React.useState<number[]>([0])
 
   if (isLoading) {
@@ -32,6 +27,8 @@ const GroceryList: React.FC = () => {
   if (isError) {
     return <div>Error fetching groceries</div>
   }
+
+  console.log(groceries)
 
   const handleToggle = (value: number) => () => {
     const currentIndex = checked.indexOf(value)
@@ -53,7 +50,7 @@ const GroceryList: React.FC = () => {
           <li key={`section-${sectionId}`}>
             <ul>
               <ListSubheader>{`${sectionId}`}</ListSubheader>
-              {[0, 1, 2].map((item) => (
+              {groceries.map((item) => (
                 <GroceryItem
                   key={`item-${sectionId}-${item}`}
                   checked={checked}
