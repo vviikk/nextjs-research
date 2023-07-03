@@ -7,16 +7,14 @@ import ListItemText from '@mui/material/ListItemText'
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import CommentIcon from '@mui/icons-material/Comment'
-import Paper from '@mui/material/Paper'
-import { Container, ListSubheader } from '@mui/material'
 
-type CheckboxItemProps = {
+type GrocerytItemProps = {
   value: number
   checked: number[]
   handleToggle: (value: number) => () => void
 }
 
-const CheckboxItem: React.FC<CheckboxItemProps> = ({
+const GroceryItem: React.FC<GrocerytItemProps> = ({
   value,
   checked,
   handleToggle,
@@ -49,44 +47,4 @@ const CheckboxItem: React.FC<CheckboxItemProps> = ({
   )
 }
 
-const CheckboxList: React.FC = () => {
-  const [checked, setChecked] = React.useState<number[]>([0])
-
-  const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value)
-    const newChecked = [...checked]
-
-    if (currentIndex === -1) {
-      newChecked.push(value)
-    } else {
-      newChecked.splice(currentIndex, 1)
-    }
-
-    setChecked(newChecked)
-  }
-
-  return (
-    <Container maxWidth="xs">
-      <Paper elevation={3}>
-        <List
-          sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-        >
-          {['To Buy', 'Purchased'].map((sectionId) => (
-            <li key={`section-${sectionId}`}>
-              <ul>
-                <ListSubheader>{`${sectionId}`}</ListSubheader>
-                {[0, 1, 2].map((item) => (
-                  <ListItem key={`item-${sectionId}-${item}`}>
-                    <ListItemText primary={`Item ${item}`} />
-                  </ListItem>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </List>
-      </Paper>
-    </Container>
-  )
-}
-
-export default CheckboxList
+export default GroceryItem
