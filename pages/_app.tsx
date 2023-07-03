@@ -7,6 +7,20 @@ import { CacheProvider, EmotionCache } from '@emotion/react'
 import theme from '../src/theme'
 import createEmotionCache from '../src/createEmotionCache'
 
+import {
+  DehydratedState,
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+import { useState } from 'react'
+
+type ReactQueryProps = {
+  pageProps: {
+    dehydratedState: DehydratedState
+  }
+}
+
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
@@ -16,15 +30,20 @@ export interface MyAppProps extends AppProps {
 
 export default function MyApp(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+  const [queryClient] = useState(() => new QueryClient())
   return (
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <Component {...pageProps} />
+        <QueryClientProvider client={queryClient}>
+          <Hydrate state={pageProps.dehydratedState}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Component {...pageProps} />
+          </Hydrate>
+        </QueryClientProvider>
       </ThemeProvider>
     </CacheProvider>
   )

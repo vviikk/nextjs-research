@@ -1,56 +1,37 @@
 import * as React from 'react'
 import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import Checkbox from '@mui/material/Checkbox'
-import IconButton from '@mui/material/IconButton'
-import CommentIcon from '@mui/icons-material/Comment'
 import Paper from '@mui/material/Paper'
 import { Container, ListSubheader } from '@mui/material'
+import GroceryItem from '../components/GroceryItem'
+import { QueryClient, useQuery } from '@tanstack/react-query'
+import { Grocery } from '../types/Grocery'
 
-type CheckboxItemProps = {
-  value: number
-  checked: number[]
-  handleToggle: (value: number) => () => void
+const fetchGroceries = async (): Promise<Grocery[]> => {
+  const response = await fetch('/api/groceries')
+  if (!response.ok) {
+    throw new Error('Error fetching groceries')
+  }
+  return response.json()
 }
 
-const CheckboxItem: React.FC<CheckboxItemProps> = ({
-  value,
-  checked,
-  handleToggle,
-}) => {
-  const labelId = `checkbox-list-label-${value}`
-
-  return (
-    <ListItem
-      key={value}
-      secondaryAction={
-        <IconButton edge="end" aria-label="comments">
-          <CommentIcon />
-        </IconButton>
-      }
-      disablePadding
-    >
-      <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
-        <ListItemIcon>
-          <Checkbox
-            edge="start"
-            checked={checked.indexOf(value) !== -1}
-            tabIndex={-1}
-            disableRipple
-            inputProps={{ 'aria-labelledby': labelId }}
-          />
-        </ListItemIcon>
-        <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
-      </ListItemButton>
-    </ListItem>
-  )
-}
-
-const CheckboxList: React.FC = () => {
+const GroceryList: React.FC = () => {
+  const {
+    data: groceries,
+    isLoading,
+    isError,
+  } = useQuery<Grocery[], Error>({
+    queryKey: ['groceries'],
+    queryFn: fetchGroceries,
+  })
   const [checked, setChecked] = React.useState<number[]>([0])
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (isError) {
+    return <div>Error fetching groceries</div>
+  }
 
   const handleToggle = (value: number) => () => {
     const currentIndex = checked.indexOf(value)
@@ -66,27 +47,34 @@ const CheckboxList: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="xs">
-      <Paper elevation={3}>
-        <List
-          sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-        >
-          {['To Buy', 'Purchased'].map((sectionId) => (
-            <li key={`section-${sectionId}`}>
-              <ul>
-                <ListSubheader>{`${sectionId}`}</ListSubheader>
-                {[0, 1, 2].map((item) => (
-                  <ListItem key={`item-${sectionId}-${item}`}>
-                    <ListItemText primary={`Item ${item}`} />
-                  </ListItem>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </List>
-      </Paper>
+    <Paper elevation={3}>
+      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        {['To Buy', 'Purchased'].map((sectionId) => (
+          <li key={`section-${sectionId}`}>
+            <ul>
+              <ListSubheader>{`${sectionId}`}</ListSubheader>
+              {[0, 1, 2].map((item) => (
+                <GroceryItem
+                  key={`item-${sectionId}-${item}`}
+                  checked={checked}
+                  handleToggle={handleToggle}
+                  value={item}
+                />
+              ))}
+            </ul>
+          </li>
+        ))}
+      </List>
+    </Paper>
+  )
+}
+
+const GroceryApp: React.FC = () => {
+  return (
+    <Container maxWidth="sm">
+      <GroceryList />
     </Container>
   )
 }
 
-export default CheckboxList
+export default GroceryApp

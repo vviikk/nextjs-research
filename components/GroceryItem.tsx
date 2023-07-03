@@ -7,6 +7,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import CommentIcon from '@mui/icons-material/Comment'
+import { Avatar, ListItemAvatar } from '@mui/material'
 
 type GrocerytItemProps = {
   value: number
@@ -32,6 +33,12 @@ const GroceryItem: React.FC<GrocerytItemProps> = ({
       disablePadding
     >
       <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+        <ListItemAvatar>
+          <Avatar
+            alt={`Avatar n°${value + 1}`}
+            src={`https://generative-placeholders.glitch.me/image?width=600&height=300&random=${Math.random()}`}
+          />
+        </ListItemAvatar>
         <ListItemIcon>
           <Checkbox
             edge="start"
