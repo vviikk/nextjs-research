@@ -3,7 +3,9 @@
   "version": "5.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently --kill-others \"yarn dev:server\" \"yarn dev:next\"",
+    "dev:server": "json-server --watch ./server/groceries-db.json --port 3001",
+    "dev:next": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -16,6 +18,8 @@
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
+    "concurrently": "^8.2.0",
+    "json-server": "^0.17.3",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
