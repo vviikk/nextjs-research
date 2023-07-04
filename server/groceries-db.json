@@ -8,17 +8,42 @@
     {
       "id": 1688497867661,
       "name": "test",
-      "is_purchased": false
+      "is_purchased": true
     },
     {
       "id": 1688503633806,
       "name": "aaasdddddfggg",
-      "is_purchased": false
+      "is_purchased": true
     },
     {
       "id": 1688504236942,
       "name": "Eggs",
-      "is_purchased": true
+      "is_purchased": false
+    },
+    {
+      "name": "Rice",
+      "is_purchased": false,
+      "id": 1688504236943
+    },
+    {
+      "name": "asdfasdf",
+      "is_purchased": false,
+      "id": 1688504236944
+    },
+    {
+      "name": "234234234",
+      "is_purchased": true,
+      "id": 1688504236945
+    },
+    {
+      "name": "asd",
+      "is_purchased": true,
+      "id": 1688504236946
+    },
+    {
+      "name": "345y345y4y",
+      "is_purchased": true,
+      "id": 1688504236947
     }
   ]
 }

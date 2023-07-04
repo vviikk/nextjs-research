@@ -13,7 +13,7 @@ import { Grocery, GroceryLists } from '../types'
 const useGroceryService = (): {
   service: GroceryService
   getGroceryListsQuery: UseQueryResult<GroceryLists, Error>
-  createGroceryMutation: UseMutationResult<void, Error, Grocery>
+  createGroceryMutation: UseMutationResult<void, Error, Partial<Grocery>>
   updateGroceryMutation: UseMutationResult<
     void,
     Error,

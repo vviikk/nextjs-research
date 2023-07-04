@@ -1,20 +1,19 @@
 import * as React from 'react'
 import List from '@mui/material/List'
 import Paper from '@mui/material/Paper'
-import {
-  Container,
-  ListSubheader,
-  TextField,
-  Button,
-  Box,
-  IconButton,
-  InputAdornment, // Import Box component
-} from '@mui/material'
+import { Container, ListSubheader, Box, Fab } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import GroceryItem from '../components/GroceryItem'
 import useGroceryService from '../hooks/useGroceryService'
 import { GroceryLists, Grocery } from '../types'
 import { camelCaseToCapitalized } from '../src/camelCaseToCapitalized'
+import AddGroceryDialog from '../components/AddGroceryDialog'
+
+const fabStyle = {
+  position: 'absolute',
+  bottom: 16,
+  right: 16,
+}
 
 const GroceryList: React.FC = () => {
   const {
@@ -24,17 +23,7 @@ const GroceryList: React.FC = () => {
     deleteGroceryMutation,
   } = useGroceryService()
   const { data: groceryLists, isLoading, isError } = getGroceryListsQuery
-  const [newGroceryName, setNewGroceryName] = React.useState('')
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-  if (isError) {
-    return <div>Error fetching groceries</div>
-  }
-
-  console.log(groceryLists)
+  const [openDialog, setOpenDialog] = React.useState(false)
 
   const handleToggle = async (item: Grocery) => {
     try {
@@ -61,15 +50,22 @@ const GroceryList: React.FC = () => {
   }
 
   const handleAddGrocery = () => {
-    if (newGroceryName.trim() !== '') {
-      const newGrocery: Grocery = {
-        id: Date.now(),
-        name: newGroceryName,
+    setOpenDialog(true)
+  }
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false)
+  }
+
+  const handleCreateGrocery = (name: string) => {
+    if (name.trim() !== '') {
+      const newGrocery: Partial<Grocery> = {
+        name,
         is_purchased: false,
       }
 
       createGroceryMutation.mutate(newGrocery)
-      setNewGroceryName('')
+      setOpenDialog(false)
     }
   }
 
@@ -82,58 +78,42 @@ const GroceryList: React.FC = () => {
     }
   }
 
+  // Loading state
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  // Error state
+  if (isError) {
+    return <div>Error fetching groceries</div>
+  }
+
   return (
     <Paper
       elevation={3}
-      // center on page
       sx={{
-        marginTop: '15rem',
+        top: '5rem',
+        position: 'relative',
+        maxHeight: 'calc(100vh - 10rem)',
       }}
     >
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          // alignItems: 'center',
           gap: '1rem',
           p: '1rem',
         }}
       >
         <Box>
-          <TextField
-            label="Add Grocery"
-            value={newGroceryName}
-            onChange={(e) => setNewGroceryName(e.target.value)}
-            fullWidth
-            margin="normal"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    edge="end"
-                    color="primary"
-                    onClick={handleAddGrocery}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-        <Box>
           <List
             sx={{
               width: '100%',
-              // maxWidth: 360,
-              bgcolor: 'background.paper',
               position: 'relative',
               overflow: 'auto',
-              maxHeight: 300,
               '& ul': { padding: 0 },
             }}
             subheader={<li />}
-            // disablePadding
           >
             {/* hard coding the categories for ordering */}
             {['pendingGroceries', 'purchasedGroceries'].map((key) => (
@@ -145,7 +125,6 @@ const GroceryList: React.FC = () => {
                   {groceryLists[key as keyof GroceryLists].map((item) => (
                     <GroceryItem
                       key={`item-${key}-${item.id}`}
-                      // checked={checked}
                       handleToggle={() => handleToggle(item)}
                       handleDelete={() => handleDelete(item)} // Pass the handleDelete function
                       handleEdit={(name) => handleEdit(item.id, name)}
@@ -157,6 +136,21 @@ const GroceryList: React.FC = () => {
             ))}
           </List>
         </Box>
+        <Box sx={{ height: '3rem' }}>
+          <Fab
+            color="primary"
+            aria-label="Add"
+            onClick={handleAddGrocery}
+            sx={fabStyle}
+          >
+            <AddIcon />
+          </Fab>
+        </Box>
+        <AddGroceryDialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          onCreateGrocery={handleCreateGrocery}
+        />
       </Box>
     </Paper>
   )
@@ -164,9 +158,16 @@ const GroceryList: React.FC = () => {
 
 const GroceryApp: React.FC = () => {
   return (
-    <Container maxWidth="sm">
-      <GroceryList />
-    </Container>
+    <Box
+      sx={{
+        backgroundColor: '#121212',
+        minHeight: '100vh',
+      }}
+    >
+      <Container maxWidth="sm">
+        <GroceryList />
+      </Container>
+    </Box>
   )
 }
 
