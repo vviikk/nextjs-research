@@ -1,4 +1,4 @@
-import { Grocery } from '../../types'
+import { Grocery } from '../types'
 
 class GroceryService {
   private serverUrl: string

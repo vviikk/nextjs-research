@@ -5,9 +5,12 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
+    "export-port": "export PORT=$(shuf -i 1024-65535 -n 1)",
     "start": "NODE_ENV=production node server.js",
     "lint": "next lint",
     "test": "jest --watch",
+    "test:e2e": "PORT=3050 JSON_SERVER_PORT=3051 playwright test",
+    "e2e:server": "npm run build && npm run start",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
   "dependencies": {
@@ -26,6 +29,7 @@
     "react-dom": "latest"
   },
   "devDependencies": {
+    "@playwright/test": "^1.35.1",
     "@tanstack/eslint-plugin-query": "^4.29.9",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",

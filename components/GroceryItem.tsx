@@ -34,7 +34,7 @@ const GroceryItem: React.FC<GrocerytItemProps> = ({
       disablePadding
       style={{ textDecoration: grocery.is_purchased ? 'line-through' : 'none' }}
     >
-      <ListItemButton role={undefined} onClick={handleToggle(grocery)} dense>
+      <ListItemButton role={undefined} onClick={handleToggle(grocery.id)} dense>
         <ListItemAvatar>
           <Avatar
             alt={`Avatar n°${grocery.id + 1}`}

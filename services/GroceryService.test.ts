@@ -1,7 +1,7 @@
 import fetchMock from 'jest-fetch-mock'
 
 import GroceryService from './GroceryService'
-import { Grocery } from '../../types'
+import { Grocery } from '../types'
 
 fetchMock.enableMocks()
 

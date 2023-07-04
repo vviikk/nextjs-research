@@ -5,7 +5,7 @@ import { renderHook, act, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import useGroceryService from './useGroceryService'
 import GroceryService from '../services/GroceryService'
-import { Grocery } from '../../types'
+import { Grocery } from '../types'
 
 // Mock the GroceryService class
 jest.mock('../services/GroceryService')
