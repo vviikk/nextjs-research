@@ -9,11 +9,6 @@
       "id": 2,
       "name": "Eggs",
       "is_purchased": false
-    },
-    {
-      "id": 3,
-      "name": "Bread",
-      "is_purchased": true
     }
   ]
 }

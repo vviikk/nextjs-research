@@ -29,6 +29,10 @@ describe('useGroceryService', () => {
       { id: 1, name: 'Apple', is_purchased: false },
       { id: 2, name: 'Banana', is_purchased: true },
     ]
+    const expectedGroceryLists = {
+      pendingGroceries: [{ id: 1, is_purchased: false, name: 'Apple' }],
+      purchasedGroceries: [{ id: 2, is_purchased: true, name: 'Banana' }],
+    }
     MockGroceryService.prototype.fetchGroceries.mockResolvedValue(mockGroceries)
 
     const wrapper: React.FC = ({ children }) => (
@@ -40,7 +44,9 @@ describe('useGroceryService', () => {
     })
 
     await waitFor(() => {
-      expect(result.current.getGroceriesQuery.data).toEqual(mockGroceries)
+      expect(result.current.getGroceryListsQuery.data).toEqual(
+        expectedGroceryLists
+      )
       expect(MockGroceryService.prototype.fetchGroceries).toHaveBeenCalledTimes(
         1
       )

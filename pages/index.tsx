@@ -3,21 +3,17 @@ import List from '@mui/material/List'
 import Paper from '@mui/material/Paper'
 import { Container, ListSubheader } from '@mui/material'
 import GroceryItem from '../components/GroceryItem'
-import { QueryClient, useQuery } from '@tanstack/react-query'
-import { Grocery } from '../types'
 import useGroceryService from '../hooks/useGroceryService'
-
-const fetchGroceries = async (): Promise<Grocery[]> => {
-  const response = await fetch('/api/groceries')
-  if (!response.ok) {
-    throw new Error('Error fetching groceries')
-  }
-  return response.json()
-}
+import { GroceryLists } from '../types'
+import { camelCaseToCapitalized } from '../src/camelCaseToCapitalized'
 
 const GroceryList: React.FC = () => {
-  const { getGroceriesQuery } = useGroceryService()
-  const { data: groceries, isLoading, isError } = getGroceriesQuery
+  const {
+    getGroceryListsQuery,
+    updateGroceryMutation,
+    deleteGroceryMutation, // Add deleteGroceryMutation
+  } = useGroceryService()
+  const { data: groceryLists, isLoading, isError } = getGroceryListsQuery
   const [checked, setChecked] = React.useState<number[]>([0])
 
   if (isLoading) {
@@ -28,9 +24,9 @@ const GroceryList: React.FC = () => {
     return <div>Error fetching groceries</div>
   }
 
-  console.log(groceries)
+  console.log(groceryLists)
 
-  const handleToggle = (value: number) => () => {
+  const handleToggle = (value: number) => async () => {
     const currentIndex = checked.indexOf(value)
     const newChecked = [...checked]
 
@@ -41,20 +37,41 @@ const GroceryList: React.FC = () => {
     }
 
     setChecked(newChecked)
+
+    try {
+      await updateGroceryMutation.mutateAsync({
+        id: value,
+        is_purchased: currentIndex === -1, // Toggle the value
+      })
+    } catch (error) {
+      console.error('Error updating grocery:', error)
+      // Handle error if necessary
+    }
+  }
+
+  const handleDelete = (id: number) => {
+    try {
+      deleteGroceryMutation.mutateAsync(id)
+    } catch (error) {
+      console.error('Error deleting grocery:', error)
+      // Handle error if necessary
+    }
   }
 
   return (
     <Paper elevation={3}>
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        {['To Buy', 'Purchased'].map((sectionId) => (
-          <li key={`section-${sectionId}`}>
+        {/* hard coding the categories for ordering */}
+        {['pendingGroceries', 'purchasedGroceries'].map((key) => (
+          <li key={`section-${key}`}>
             <ul>
-              <ListSubheader>{`${sectionId}`}</ListSubheader>
-              {groceries.map((item) => (
+              <ListSubheader>{`${camelCaseToCapitalized(key)}`}</ListSubheader>
+              {groceryLists[key as keyof GroceryLists].map((item) => (
                 <GroceryItem
-                  key={`item-${sectionId}-${item}`}
+                  key={`item-${key}-${item}`}
                   checked={checked}
                   handleToggle={handleToggle}
+                  handleDelete={handleDelete} // Pass the handleDelete function
                   value={item}
                 />
               ))}

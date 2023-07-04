@@ -45,7 +45,7 @@ describe('GroceryService', () => {
 
   describe('createGrocery', () => {
     it('should create a grocery successfully', async () => {
-      const grocery: Grocery = { id: 1, name: 'Milk' }
+      const grocery: Grocery = { id: 1, name: 'Milk', is_purchased: true }
 
       fetchMock.mockResponseOnce(JSON.stringify({}))
 

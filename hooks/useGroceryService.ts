@@ -7,11 +7,11 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query'
 import GroceryService from '../services/GroceryService'
-import { Grocery } from '../types'
+import { Grocery, GroceryLists } from '../types'
 
 const useGroceryService = (): {
   service: GroceryService
-  getGroceriesQuery: UseQueryResult<Grocery[], Error>
+  getGroceryListsQuery: UseQueryResult<GroceryLists, Error>
   createGroceryMutation: UseMutationResult<void, Error, Grocery>
   updateGroceryMutation: UseMutationResult<void, Error, Grocery>
   deleteGroceryMutation: UseMutationResult<void, Error, number>
@@ -25,9 +25,17 @@ const useGroceryService = (): {
   const service = serviceRef.current
   const queryClient = useQueryClient()
 
-  const getGroceriesQuery = useQuery<Grocery[], Error>({
+  const getGroceryListsQuery = useQuery<GroceryLists, Error>({
     queryKey: ['groceries'],
     queryFn: service.fetchGroceries,
+    select: (data) => {
+      const purchasedGroceries = data.filter((grocery) => grocery.is_purchased)
+      const pendingGroceries = data.filter((grocery) => !grocery.is_purchased)
+      return {
+        purchasedGroceries,
+        pendingGroceries,
+      }
+    },
   })
 
   const createGroceryMutation = useMutation<void, Error, Grocery>({
@@ -53,10 +61,11 @@ const useGroceryService = (): {
 
   return {
     service,
-    getGroceriesQuery,
+    getGroceryListsQuery,
     createGroceryMutation,
     updateGroceryMutation,
     deleteGroceryMutation,
   }
 }
+
 export default useGroceryService

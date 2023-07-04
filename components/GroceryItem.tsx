@@ -1,25 +1,23 @@
 import * as React from 'react'
-import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Checkbox from '@mui/material/Checkbox'
-import IconButton from '@mui/material/IconButton'
-import CommentIcon from '@mui/icons-material/Comment'
-import { Avatar, ListItemAvatar } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { Grocery } from '../types'
+import IconButton from '@mui/material/IconButton'
 
-type GrocerytItemProps = {
+type GroceryItemProps = {
   value: Grocery
-  checked: number[]
   handleToggle: (value: number) => () => void
+  handleDelete: (id: number) => void // Add the handleDelete function
 }
 
-const GroceryItem: React.FC<GrocerytItemProps> = ({
+const GroceryItem: React.FC<GroceryItemProps> = ({
   value: grocery,
-  checked,
   handleToggle,
+  handleDelete,
 }) => {
   const labelId = `checkbox-list-label-${grocery}`
 
@@ -27,20 +25,20 @@ const GroceryItem: React.FC<GrocerytItemProps> = ({
     <ListItem
       key={`item-${grocery.id}`}
       secondaryAction={
-        <IconButton edge="end" aria-label="comments">
-          <CommentIcon />
-        </IconButton>
+        <>
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={() => handleDelete(grocery.id)} // Call handleDelete when the delete button is clicked
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
       }
       disablePadding
       style={{ textDecoration: grocery.is_purchased ? 'line-through' : 'none' }}
     >
       <ListItemButton role={undefined} onClick={handleToggle(grocery.id)} dense>
-        <ListItemAvatar>
-          <Avatar
-            alt={`Avatar n°${grocery.id + 1}`}
-            src={`https://generative-placeholders.glitch.me/image?width=600&height=300&random=${Math.random()}`}
-          />
-        </ListItemAvatar>
         <ListItemIcon>
           <Checkbox
             edge="start"

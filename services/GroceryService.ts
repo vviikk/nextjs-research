@@ -1,10 +1,21 @@
-import { Grocery } from '../types'
+import { Grocery, GroceryLists } from '../types'
 
 class GroceryService {
-  private serverUrl: string
+  private serverUrl: string = '/api'
+
   constructor(serverUrl: string = '/api') {
     this.serverUrl = serverUrl
+
+    // iterate over properties of this class and bind them to the class
+    // this is necessary to ensure that `this` is bound correctly when
+    // these methods are called
+    Object.getOwnPropertyNames(GroceryService.prototype)
+      .filter((key) => typeof this[key] === 'function')
+      .forEach((key) => {
+        this[key] = this[key].bind(this)
+      })
   }
+
   async fetchGroceries(): Promise<Grocery[]> {
     const response = await fetch(`${this.serverUrl}/groceries`)
     if (!response.ok) {
@@ -30,7 +41,7 @@ class GroceryService {
     grocery: Partial<Grocery> & Pick<Grocery, 'id'>
   ): Promise<void> {
     const response = await fetch(`${this.serverUrl}/groceries/${grocery.id}`, {
-      method: 'PUT',
+      method: 'PATCH', // Use PATCH method instead of PUT
       headers: {
         'Content-Type': 'application/json',
       },
@@ -42,7 +53,7 @@ class GroceryService {
   }
 
   async purchaseGrocery(id: number, is_purchased: boolean): Promise<void> {
-    // use updateGrocery to toggle the is_purchased field
+    // Use updateGrocery to toggle the is_purchased field
     await this.updateGrocery({
       id,
       is_purchased,
