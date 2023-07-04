@@ -1,7 +1,16 @@
 import * as React from 'react'
 import List from '@mui/material/List'
 import Paper from '@mui/material/Paper'
-import { Container, ListSubheader, TextField, Button } from '@mui/material'
+import {
+  Container,
+  ListSubheader,
+  TextField,
+  Button,
+  Box,
+  IconButton,
+  InputAdornment, // Import Box component
+} from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 import GroceryItem from '../components/GroceryItem'
 import useGroceryService from '../hooks/useGroceryService'
 import { GroceryLists, Grocery } from '../types'
@@ -74,37 +83,81 @@ const GroceryList: React.FC = () => {
   }
 
   return (
-    <Paper elevation={3}>
-      <TextField
-        label="Add Grocery"
-        value={newGroceryName}
-        onChange={(e) => setNewGroceryName(e.target.value)}
-        fullWidth
-        margin="normal"
-      />
-      <Button variant="contained" onClick={handleAddGrocery}>
-        Add
-      </Button>
-      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        {/* hard coding the categories for ordering */}
-        {['pendingGroceries', 'purchasedGroceries'].map((key) => (
-          <li key={`section-${key}`}>
-            <ul>
-              <ListSubheader>{`${camelCaseToCapitalized(key)}`}</ListSubheader>
-              {groceryLists[key as keyof GroceryLists].map((item) => (
-                <GroceryItem
-                  key={`item-${key}-${item}`}
-                  // checked={checked}
-                  handleToggle={() => handleToggle(item)}
-                  handleDelete={() => handleDelete(item)} // Pass the handleDelete function
-                  handleEdit={(name) => handleEdit(item.id, name)}
-                  grocery={item}
-                />
-              ))}
-            </ul>
-          </li>
-        ))}
-      </List>
+    <Paper
+      elevation={3}
+      // center on page
+      sx={{
+        marginTop: '15rem',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          // alignItems: 'center',
+          gap: '1rem',
+          p: '1rem',
+        }}
+      >
+        <Box>
+          <TextField
+            label="Add Grocery"
+            value={newGroceryName}
+            onChange={(e) => setNewGroceryName(e.target.value)}
+            fullWidth
+            margin="normal"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    edge="end"
+                    color="primary"
+                    onClick={handleAddGrocery}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+        <Box>
+          <List
+            sx={{
+              width: '100%',
+              // maxWidth: 360,
+              bgcolor: 'background.paper',
+              position: 'relative',
+              overflow: 'auto',
+              maxHeight: 300,
+              '& ul': { padding: 0 },
+            }}
+            subheader={<li />}
+            // disablePadding
+          >
+            {/* hard coding the categories for ordering */}
+            {['pendingGroceries', 'purchasedGroceries'].map((key) => (
+              <li key={`section-${key}`}>
+                <ul>
+                  <ListSubheader>{`${camelCaseToCapitalized(
+                    key
+                  )}`}</ListSubheader>
+                  {groceryLists[key as keyof GroceryLists].map((item) => (
+                    <GroceryItem
+                      key={`item-${key}-${item.id}`}
+                      // checked={checked}
+                      handleToggle={() => handleToggle(item)}
+                      handleDelete={() => handleDelete(item)} // Pass the handleDelete function
+                      handleEdit={(name) => handleEdit(item.id, name)}
+                      grocery={item}
+                    />
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </List>
+        </Box>
+      </Box>
     </Paper>
   )
 }

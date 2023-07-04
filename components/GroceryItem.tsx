@@ -44,6 +44,7 @@ const GroceryItem: React.FC<GroceryItemProps> = ({
 
   return (
     <ListItem
+      disablePadding
       secondaryAction={
         <>
           {!editMode ? (
