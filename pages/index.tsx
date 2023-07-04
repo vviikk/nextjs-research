@@ -1,20 +1,21 @@
 import * as React from 'react'
 import List from '@mui/material/List'
 import Paper from '@mui/material/Paper'
-import { Container, ListSubheader } from '@mui/material'
+import { Container, ListSubheader, TextField, Button } from '@mui/material'
 import GroceryItem from '../components/GroceryItem'
 import useGroceryService from '../hooks/useGroceryService'
-import { GroceryLists } from '../types'
+import { GroceryLists, Grocery } from '../types'
 import { camelCaseToCapitalized } from '../src/camelCaseToCapitalized'
 
 const GroceryList: React.FC = () => {
   const {
     getGroceryListsQuery,
     updateGroceryMutation,
-    deleteGroceryMutation, // Add deleteGroceryMutation
+    createGroceryMutation,
+    deleteGroceryMutation,
   } = useGroceryService()
   const { data: groceryLists, isLoading, isError } = getGroceryListsQuery
-  const [checked, setChecked] = React.useState<number[]>([0])
+  const [newGroceryName, setNewGroceryName] = React.useState('')
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -26,22 +27,11 @@ const GroceryList: React.FC = () => {
 
   console.log(groceryLists)
 
-  const handleToggle = (value: number) => async () => {
-    const currentIndex = checked.indexOf(value)
-    const newChecked = [...checked]
-
-    if (currentIndex === -1) {
-      newChecked.push(value)
-    } else {
-      newChecked.splice(currentIndex, 1)
-    }
-
-    setChecked(newChecked)
-
+  const handleToggle = async (item: Grocery) => {
     try {
       await updateGroceryMutation.mutateAsync({
-        id: value,
-        is_purchased: currentIndex === -1, // Toggle the value
+        id: item.id,
+        is_purchased: !item.is_purchased,
       })
     } catch (error) {
       console.error('Error updating grocery:', error)
@@ -49,9 +39,22 @@ const GroceryList: React.FC = () => {
     }
   }
 
-  const handleDelete = (id: number) => {
+  const handleAddGrocery = () => {
+    if (newGroceryName.trim() !== '') {
+      const newGrocery: Grocery = {
+        id: Date.now(),
+        name: newGroceryName,
+        is_purchased: false,
+      }
+
+      createGroceryMutation.mutate(newGrocery)
+      setNewGroceryName('')
+    }
+  }
+
+  const handleDelete = async (item: Grocery) => {
     try {
-      deleteGroceryMutation.mutateAsync(id)
+      await deleteGroceryMutation.mutateAsync(item.id)
     } catch (error) {
       console.error('Error deleting grocery:', error)
       // Handle error if necessary
@@ -60,6 +63,16 @@ const GroceryList: React.FC = () => {
 
   return (
     <Paper elevation={3}>
+      <TextField
+        label="Add Grocery"
+        value={newGroceryName}
+        onChange={(e) => setNewGroceryName(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
+      <Button variant="contained" onClick={handleAddGrocery}>
+        Add
+      </Button>
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         {/* hard coding the categories for ordering */}
         {['pendingGroceries', 'purchasedGroceries'].map((key) => (
@@ -69,10 +82,10 @@ const GroceryList: React.FC = () => {
               {groceryLists[key as keyof GroceryLists].map((item) => (
                 <GroceryItem
                   key={`item-${key}-${item}`}
-                  checked={checked}
-                  handleToggle={handleToggle}
-                  handleDelete={handleDelete} // Pass the handleDelete function
-                  value={item}
+                  // checked={checked}
+                  handleToggle={() => handleToggle(item)}
+                  handleDelete={() => handleDelete(item)} // Pass the handleDelete function
+                  grocery={item}
                 />
               ))}
             </ul>

@@ -1,55 +1,37 @@
 import * as React from 'react'
 import ListItem from '@mui/material/ListItem'
-import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Checkbox from '@mui/material/Checkbox'
+import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Grocery } from '../types'
-import IconButton from '@mui/material/IconButton'
 
-type GroceryItemProps = {
-  value: Grocery
-  handleToggle: (value: number) => () => void
-  handleDelete: (id: number) => void // Add the handleDelete function
+interface GroceryItemProps {
+  // checked: boolean
+  handleToggle: () => void
+  handleDelete: () => void
+  grocery: Grocery
 }
 
 const GroceryItem: React.FC<GroceryItemProps> = ({
-  value: grocery,
+  // checked,
   handleToggle,
   handleDelete,
+  grocery,
 }) => {
-  const labelId = `checkbox-list-label-${grocery}`
-
   return (
     <ListItem
-      key={`item-${grocery.id}`}
       secondaryAction={
-        <>
-          <IconButton
-            edge="end"
-            aria-label="delete"
-            onClick={() => handleDelete(grocery.id)} // Call handleDelete when the delete button is clicked
-          >
-            <DeleteIcon />
-          </IconButton>
-        </>
+        <IconButton edge="end" aria-label="delete" onClick={handleDelete}>
+          <DeleteIcon />
+        </IconButton>
       }
-      disablePadding
-      style={{ textDecoration: grocery.is_purchased ? 'line-through' : 'none' }}
     >
-      <ListItemButton role={undefined} onClick={handleToggle(grocery.id)} dense>
-        <ListItemIcon>
-          <Checkbox
-            edge="start"
-            checked={grocery.is_purchased}
-            tabIndex={-1}
-            disableRipple
-            inputProps={{ 'aria-labelledby': labelId }}
-          />
-        </ListItemIcon>
-        <ListItemText id={labelId} primary={grocery.name} />
-      </ListItemButton>
+      <ListItemIcon>
+        <Checkbox checked={grocery.is_purchased} onClick={handleToggle} />
+      </ListItemIcon>
+      <ListItemText primary={grocery.name} />
     </ListItem>
   )
 }
