@@ -1,4 +1,4 @@
-import { Grocery, GroceryLists } from '../types'
+import { Grocery } from '../types'
 
 class GroceryService {
   private serverUrl: string = '/api'
@@ -6,9 +6,9 @@ class GroceryService {
   constructor(serverUrl: string = '/api') {
     this.serverUrl = serverUrl
 
-    // iterate over properties of this class and bind them to the class
-    // this is necessary to ensure that `this` is bound correctly when
-    // these methods are called
+    // // iterate over properties of this class and bind them to the class
+    // // this is necessary to ensure that `this` is bound correctly when
+    // // these methods are called
     Object.getOwnPropertyNames(GroceryService.prototype)
       .filter((key) => typeof this[key] === 'function')
       .forEach((key) => {
