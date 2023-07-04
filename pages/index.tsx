@@ -39,6 +39,18 @@ const GroceryList: React.FC = () => {
     }
   }
 
+  const handleEdit = async (id: number, name: string) => {
+    try {
+      await updateGroceryMutation.mutateAsync({
+        id,
+        name,
+      })
+    } catch (error) {
+      console.error('Error updating grocery:', error)
+      // Handle error if necessary
+    }
+  }
+
   const handleAddGrocery = () => {
     if (newGroceryName.trim() !== '') {
       const newGrocery: Grocery = {
@@ -85,6 +97,7 @@ const GroceryList: React.FC = () => {
                   // checked={checked}
                   handleToggle={() => handleToggle(item)}
                   handleDelete={() => handleDelete(item)} // Pass the handleDelete function
+                  handleEdit={(name) => handleEdit(item.id, name)}
                   grocery={item}
                 />
               ))}
