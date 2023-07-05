@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import { useReducer, useState } from 'react'
 import {
   ListItem,
   ListItemText,
@@ -16,23 +16,19 @@ interface GroceryItemProps {
   grocery: Grocery
 }
 
-type State = {
-  id: number
-  name: string
-  amount: string
-}
+type PatchGrocery = Partial<Grocery> & Pick<Grocery, 'id'>
 
 type Action =
   | { type: 'SET_NAME'; payload: string }
-  | { type: 'SET_AMOUNT'; payload: string }
+  | { type: 'SET_AMOUNT'; payload: number }
 
-const initialState = (grocery: Grocery): State => ({
+const initialState = (grocery: Grocery): PatchGrocery => ({
   id: grocery.id,
   name: grocery.name,
-  amount: grocery.amount.toString(),
+  amount: grocery.amount || 0,
 })
 
-const reducer = (state: State, action: Action): State => {
+const reducer = (state: PatchGrocery, action: Action): PatchGrocery => {
   switch (action.type) {
     case 'SET_NAME':
       return { ...state, name: action.payload }
@@ -46,7 +42,7 @@ const reducer = (state: State, action: Action): State => {
 const useEdit = (grocery: Grocery) => {
   const { updateGroceryMutation } = useGroceryService()
   const [state, dispatch] = useReducer(reducer, grocery, initialState)
-  const [editMode, setEditMode] = React.useState(false)
+  const [editMode, setEditMode] = useState(false)
 
   const handleEdit = async () => {
     if (editMode) {
@@ -54,7 +50,7 @@ const useEdit = (grocery: Grocery) => {
         await updateGroceryMutation.mutateAsync({
           id: state.id,
           name: state.name,
-          amount: parseInt(state.amount),
+          amount: state.amount,
         })
       } catch (error) {
         console.error('Error updating grocery:', error)
@@ -69,7 +65,7 @@ const useEdit = (grocery: Grocery) => {
   }
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'SET_AMOUNT', payload: e.target.value })
+    dispatch({ type: 'SET_AMOUNT', payload: parseInt(e.target.value) })
   }
 
   return { state, editMode, handleEdit, handleNameChange, handleAmountChange }

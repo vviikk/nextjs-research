@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   useQueryClient,
   useMutation,
@@ -8,6 +7,7 @@ import {
 } from '@tanstack/react-query'
 import GroceryService from '../services/GroceryService'
 import { Grocery, GroceryLists } from '../types'
+import { useRef } from 'react'
 
 const useGroceryService = (): {
   service: GroceryService
@@ -20,7 +20,7 @@ const useGroceryService = (): {
   >
   deleteGroceryMutation: UseMutationResult<void, Error, number>
 } => {
-  const serviceRef = React.useRef<GroceryService>()
+  const serviceRef = useRef<GroceryService>()
 
   if (!serviceRef.current) {
     serviceRef.current = new GroceryService()

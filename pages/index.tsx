@@ -1,4 +1,3 @@
-import React from 'react'
 import { Container, Box } from '@mui/material'
 import GroceryList from '../components/GroceryList'
 

@@ -20,6 +20,7 @@ type ReactQueryProps = {
     dehydratedState: DehydratedState
   }
 }
+  const queryClient = new QueryClient()
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -30,7 +31,6 @@ export interface MyAppProps extends AppProps {
 
 export default function MyApp(props: MyAppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-  const [queryClient] = useState(() => new QueryClient())
   return (
     <CacheProvider value={emotionCache}>
       <Head>

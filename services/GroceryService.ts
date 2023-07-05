@@ -1,7 +1,7 @@
 import { Grocery } from '../types'
 
 class GroceryService {
-  private serverUrl: string = '/api'
+  private serverUrl: string = process.env.API_URL || '/api'
 
   constructor(serverUrl: string = '/api') {
     this.serverUrl = serverUrl
