@@ -1,7 +1,6 @@
 import fetchMock from 'jest-fetch-mock'
 
 import GroceryService from './GroceryService'
-import { Grocery } from '../types'
 
 fetchMock.enableMocks()
 
@@ -19,9 +18,9 @@ describe('GroceryService', () => {
   describe('fetchGroceries', () => {
     it('should fetch groceries successfully', async () => {
       const mockResponse: Grocery[] = [
-        { id: 1, name: 'Milk', is_purchased: true },
-        { id: 2, name: 'Eggs', is_purchased: false },
-        { id: 3, name: 'Bread', is_purchased: false },
+        { id: 1, name: 'Milk', is_purchased: true, amount: 2 },
+        { id: 2, name: 'Eggs', is_purchased: false, amount: 1 },
+        { id: 3, name: 'Bread', is_purchased: false, amount: 2 },
       ]
 
       fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
@@ -45,7 +44,12 @@ describe('GroceryService', () => {
 
   describe('createGrocery', () => {
     it('should create a grocery successfully', async () => {
-      const grocery: Grocery = { id: 1, name: 'Milk', is_purchased: true }
+      const grocery: Grocery = {
+        id: 1,
+        name: 'Milk',
+        is_purchased: true,
+        amount: 1,
+      }
 
       fetchMock.mockResponseOnce(JSON.stringify({}))
 

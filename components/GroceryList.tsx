@@ -3,7 +3,6 @@ import Paper from '@mui/material/Paper'
 import { ListSubheader, Box } from '@mui/material'
 import GroceryItem from '@/components/GroceryItem'
 import useGroceryService from '@/hooks/useGroceryService'
-import { GroceryLists } from '../types'
 import { camelCaseToCapitalized } from '@/src/camelCaseToCapitalized'
 import AddGroceryDialog from '@/components/AddGroceryDialog'
 

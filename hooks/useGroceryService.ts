@@ -6,7 +6,6 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query'
 import GroceryService from '../services/GroceryService'
-import { Grocery, GroceryLists } from '../types'
 import { useRef } from 'react'
 
 const useGroceryService = (): {
