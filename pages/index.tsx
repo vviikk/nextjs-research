@@ -1,29 +1,17 @@
-import * as React from 'react'
+import React from 'react'
 import List from '@mui/material/List'
 import Paper from '@mui/material/Paper'
-import { Container, ListSubheader, Box, Fab } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
+import { Container, ListSubheader, Box } from '@mui/material'
 import GroceryItem from '../components/GroceryItem'
 import useGroceryService from '../hooks/useGroceryService'
 import { GroceryLists, Grocery } from '../types'
 import { camelCaseToCapitalized } from '../src/camelCaseToCapitalized'
 import AddGroceryDialog from '../components/AddGroceryDialog'
 
-const fabStyle = {
-  position: 'absolute',
-  bottom: 16,
-  right: 16,
-}
-
 const GroceryList: React.FC = () => {
-  const {
-    getGroceryListsQuery,
-    updateGroceryMutation,
-    createGroceryMutation,
-    deleteGroceryMutation,
-  } = useGroceryService()
+  const { getGroceryListsQuery, updateGroceryMutation, deleteGroceryMutation } =
+    useGroceryService()
   const { data: groceryLists, isLoading, isError } = getGroceryListsQuery
-  const [openDialog, setOpenDialog] = React.useState(false)
 
   const handleToggle = async (item: Grocery) => {
     try {
@@ -34,38 +22,6 @@ const GroceryList: React.FC = () => {
     } catch (error) {
       console.error('Error updating grocery:', error)
       // Handle error if necessary
-    }
-  }
-
-  const handleEdit = async (id: number, name: string) => {
-    try {
-      await updateGroceryMutation.mutateAsync({
-        id,
-        name,
-      })
-    } catch (error) {
-      console.error('Error updating grocery:', error)
-      // Handle error if necessary
-    }
-  }
-
-  const handleAddGrocery = () => {
-    setOpenDialog(true)
-  }
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false)
-  }
-
-  const handleCreateGrocery = (name: string) => {
-    if (name.trim() !== '') {
-      const newGrocery: Partial<Grocery> = {
-        name,
-        is_purchased: false,
-      }
-
-      createGroceryMutation.mutate(newGrocery)
-      setOpenDialog(false)
     }
   }
 
@@ -126,8 +82,8 @@ const GroceryList: React.FC = () => {
                     <GroceryItem
                       key={`item-${key}-${item.id}`}
                       handleToggle={() => handleToggle(item)}
-                      handleDelete={() => handleDelete(item)} // Pass the handleDelete function
-                      handleEdit={(name) => handleEdit(item.id, name)}
+                      handleDelete={() => handleDelete(item)}
+                      // handleEdit={(name) => handleEdit(item.id, name)}
                       grocery={item}
                     />
                   ))}
@@ -136,39 +92,10 @@ const GroceryList: React.FC = () => {
             ))}
           </List>
         </Box>
-        <Box sx={{ height: '3rem' }}>
-          <Fab
-            color="primary"
-            aria-label="Add"
-            onClick={handleAddGrocery}
-            sx={fabStyle}
-          >
-            <AddIcon />
-          </Fab>
-        </Box>
-        <AddGroceryDialog
-          open={openDialog}
-          onClose={handleCloseDialog}
-          onCreateGrocery={handleCreateGrocery}
-        />
+        <AddGroceryDialog />
       </Box>
     </Paper>
   )
 }
 
-const GroceryApp: React.FC = () => {
-  return (
-    <Box
-      sx={{
-        backgroundColor: '#121212',
-        minHeight: '100vh',
-      }}
-    >
-      <Container maxWidth="sm">
-        <GroceryList />
-      </Container>
-    </Box>
-  )
-}
-
-export default GroceryApp
+export default GroceryList
