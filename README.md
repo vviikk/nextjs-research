@@ -8,7 +8,8 @@
 
 ![Alt text](.docs/assets/image.png)
 
-![Alt text](.docs/assets/image-1.png)
+![image](https://github.com/vviikk/nextjs-research/assets/1991125/43d08a7a-9e61-4b92-a65f-d107d37c9e5f)
+
 
 ```bash
 $ npm run dev # starts the dev server
