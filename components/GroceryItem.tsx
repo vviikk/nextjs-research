@@ -5,12 +5,12 @@ import {
   Checkbox,
   IconButton,
   TextField,
+  Box,
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import SaveIcon from '@mui/icons-material/Save'
 import EditIcon from '@mui/icons-material/Edit'
 import useGroceryService from '../hooks/useGroceryService'
-import { Grocery } from '../types'
 
 interface GroceryItemProps {
   grocery: Grocery
@@ -25,7 +25,7 @@ type Action =
 const initialState = (grocery: Grocery): PatchGrocery => ({
   id: grocery.id,
   name: grocery.name,
-  amount: grocery.amount || 0,
+  amount: grocery.amount,
 })
 
 const reducer = (state: PatchGrocery, action: Action): PatchGrocery => {
@@ -123,22 +123,35 @@ const GroceryItem: React.FC<GroceryItemProps> = ({ grocery }) => {
   return (
     <ListItem data-testid={`grocery-item-${grocery.id}`}>
       {editMode ? (
-        <>
+        <Box
+          component="form"
+          sx={{
+            '& .MuiTextField-root': { m: 1, width: '45%' },
+          }}
+          noValidate
+          autoComplete="off"
+        >
           <TextField
             fullWidth
             value={state.name}
             onChange={handleNameChange}
             error={state.name?.trim() === ''}
+            required
+            label="Name"
+            size="small"
           />
           <TextField
             fullWidth
             type="number"
             value={state.amount}
             onChange={handleAmountChange}
-            error={state.amount < 1}
+            error={typeof state.amount != 'number' || state.amount < 1}
+            helperText="Must be greater than 0"
             required={true}
+            label="Amount"
+            size="small"
           />
-        </>
+        </Box>
       ) : (
         <>
           <Checkbox checked={grocery.is_purchased} onChange={handleToggle} />
@@ -152,11 +165,13 @@ const GroceryItem: React.FC<GroceryItemProps> = ({ grocery }) => {
           />
         </>
       )}
+
       <IconButton
         edge="end"
         aria-label={editMode ? 'save' : 'edit'}
         onClick={handleEdit}
         disabled={editMode && isInvalid}
+        data-testid={`${editMode ? 'save' : 'edit'}-button`}
       >
         {editMode ? <SaveIcon /> : <EditIcon />}
       </IconButton>

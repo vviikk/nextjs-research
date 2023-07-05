@@ -9,7 +9,7 @@ import {
   Fab,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
-import { Grocery } from '../types'
+
 import useGroceryService from '@/hooks/useGroceryService'
 
 interface AddGroceryDialogProps {

@@ -1,5 +1,3 @@
-import { Grocery } from '../types'
-
 class GroceryService {
   private serverUrl: string
 

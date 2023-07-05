@@ -2,7 +2,7 @@
 
 [![Playwright Tests](https://github.com/vviikk/nextjs-research/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/vviikk/nextjs-research/actions/workflows/playwright.yml)
 
-[Open in CodeSandbox](https://shorturl.at/ARS48)
+[Open in CodeSandbox](https://shorturl.at/ejwQV)
 
 # What is this?
 
