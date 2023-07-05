@@ -6,13 +6,15 @@ class GroceryService {
   constructor(serverUrl: string = '/api') {
     this.serverUrl = serverUrl
 
-    // // iterate over properties of this class and bind them to the class
-    // // this is necessary to ensure that `this` is bound correctly when
-    // // these methods are called
+    // iterate over properties of this class and bind them to the class
+    // this is necessary to ensure that `this` is bound correctly when
+    // these methods are called
     Object.getOwnPropertyNames(GroceryService.prototype)
-      .filter((key) => typeof this[key] === 'function')
+      .filter((key) => typeof this[key as keyof GroceryService] === 'function')
       .forEach((key) => {
-        this[key] = this[key].bind(this)
+        this[key as keyof GroceryService] = (
+          this[key as keyof GroceryService] as Function
+        ).bind(this)
       })
   }
 
@@ -24,7 +26,7 @@ class GroceryService {
     return response.json()
   }
 
-  async createGrocery(grocery: Grocery): Promise<void> {
+  async createGrocery(grocery: Partial<Grocery>): Promise<void> {
     const response = await fetch(`${this.serverUrl}/groceries`, {
       method: 'POST',
       headers: {

@@ -23,31 +23,64 @@ describe('GroceryApp', () => {
     await page.close()
   })
 
-  test('should add a new grocery', async () => {
-    // Type the grocery name in the input field
-    await page.fill('input[aria-label="Add Grocery"]', 'Milk')
+  test('should add a new grocery item', async () => {
+    // Open the Add Grocery Dialog
+    await page.click('[data-testid="add-grocery-button"]')
+    await page.waitForSelector('[data-testid="add-grocery-dialog"]')
 
-    // Click the add button
-    await page.click('button')
+    // Enter the grocery name
+    await page.fill(
+      '[data-testid="grocery-name-input"] input',
+      'New Grocery Item'
+    )
 
-    // Wait for the grocery item to be added
-    await page.waitForSelector('li:last-child .grocery-item')
+    // Click the Add button
+    await page.click('[data-testid="add-button"]')
 
-    // Verify that the grocery item is added with the correct name
-    const groceryName = await page.textContent('li:last-child .grocery-item')
-    expect(groceryName).toBe('Milk')
+    // Wait for the new grocery item to appear in the list
+    // await page.waitForSelector('[data-testid="grocery-item"]')
+    // const groceryItem = await page.$('[data-testid="grocery-item"]')
+
+    // wait for text to appear
+    await page.waitForSelector('text=New Grocery Item')
+    // expect(groceryItem).toBeTruthy()
   })
 
-  test('should mark a grocery as purchased', async () => {
-    // Mark the first grocery as purchased
-    await page.click('input[type="checkbox"]')
+  // test('should add a new grocery', async () => {
+  //   // Type the grocery name in the input field
+  //   await page.fill('input[aria-label="Add Grocery"]', 'Milk')
 
-    // Wait for the grocery item to be updated
-    await page.waitForSelector('li:first-child input[type="checkbox"]:checked')
+  //   // Click the add button
+  //   await page.click('button')
+
+  //   // Wait for the grocery item to be added
+  //   await page.waitForSelector('li:last-child .grocery-item')
+
+  //   // Verify that the grocery item is added with the correct name
+  //   const groceryName = await page.textContent('li:last-child .grocery-item')
+  //   expect(groceryName).toBe('Milk')
+  // })
+
+  test('should mark a grocery as purchased', async () => {
+    // get the test id of the first grocery
+    const firstGroceryTestId = await page.getAttribute(
+      'li:first-child',
+      'data-testid'
+    )
+
+    // find the checkbox inside the first grocery and click it
+    await page.click(
+      `[data-testid="${firstGroceryTestId}"] input[type="checkbox"]`
+    )
+
+    // Wait for the grocery item's checkbox with that test id to be checked
+    await page.waitForSelector(
+      `[data-testid="${firstGroceryTestId}"] input[type="checkbox"]:checked`
+    )
 
     // Verify that the grocery item is marked as purchased
     const isChecked = await page.isChecked(
-      'li:first-child input[type="checkbox"]'
+      `[data-testid="${firstGroceryTestId}"] input[type="checkbox"]`
     )
     expect(isChecked).toBe(true)
   })

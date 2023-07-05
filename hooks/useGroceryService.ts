@@ -5,7 +5,6 @@ import {
   UseMutationResult,
   useQuery,
   UseQueryResult,
-  QueryKey,
 } from '@tanstack/react-query'
 import GroceryService from '../services/GroceryService'
 import { Grocery, GroceryLists } from '../types'
@@ -43,7 +42,7 @@ const useGroceryService = (): {
     },
   })
 
-  const createGroceryMutation = useMutation<void, Error, Grocery>({
+  const createGroceryMutation = useMutation<void, Error, Partial<Grocery>>({
     mutationFn: service.createGrocery,
     onSuccess: () => {
       queryClient.invalidateQueries(['groceries'])
