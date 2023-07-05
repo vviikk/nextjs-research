@@ -16,7 +16,14 @@
     "jsxImportSource": "@emotion/react",
     "incremental": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "paths": {
+      "@/components/*": ["./components/*"],
+      "@/services/*": ["./services/*"],
+      "@/src/*": ["./src/*"],
+      "@/types/*": ["./types/*"],
+      "@/hooks/*": ["./hooks/*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

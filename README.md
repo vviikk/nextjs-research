@@ -4,6 +4,18 @@
 
 # What is this?
 
+![Alt text](.docs/assets/image.png)
+
+![Alt text](.docs/assets/image-1.png)
+
+```bash
+$ npm run dev # starts the dev server
+
+# or
+$ npm run build # builds the app
+$ npm run start # starts the app
+```
+
 An example app allowing users to make their grocery lists.
 
 Here are user stories that should be covered:

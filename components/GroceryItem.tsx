@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import {
   ListItem,
   ListItemText,
@@ -16,7 +16,7 @@ interface GroceryItemProps {
   grocery: Grocery
 }
 
-type PatchGrocery = Partial<Grocery> & Pick<Grocery, 'id'>
+type PatchGrocery = Partial<Grocery> & Pick<Grocery, 'id' | 'amount'>
 
 type Action =
   | { type: 'SET_NAME'; payload: string }
@@ -43,6 +43,16 @@ const useEdit = (grocery: Grocery) => {
   const { updateGroceryMutation } = useGroceryService()
   const [state, dispatch] = useReducer(reducer, grocery, initialState)
   const [editMode, setEditMode] = useState(false)
+  const [isInvalid, setIsInvalid] = useState<boolean>()
+
+  useEffect(() => {
+    if (state.name?.trim() === '' || !state.amount || state.amount < 1) {
+      setIsInvalid(true)
+      return
+    }
+    // Validation passed, clear the error
+    setIsInvalid(false)
+  }, [state.name, state.amount])
 
   const handleEdit = async () => {
     if (editMode) {
@@ -68,13 +78,26 @@ const useEdit = (grocery: Grocery) => {
     dispatch({ type: 'SET_AMOUNT', payload: parseInt(e.target.value) })
   }
 
-  return { state, editMode, handleEdit, handleNameChange, handleAmountChange }
+  return {
+    state,
+    editMode,
+    handleEdit,
+    handleNameChange,
+    handleAmountChange,
+    isInvalid,
+  }
 }
 
 const GroceryItem: React.FC<GroceryItemProps> = ({ grocery }) => {
   const { updateGroceryMutation, deleteGroceryMutation } = useGroceryService()
-  const { state, editMode, handleEdit, handleNameChange, handleAmountChange } =
-    useEdit(grocery)
+  const {
+    state,
+    editMode,
+    handleEdit,
+    handleNameChange,
+    handleAmountChange,
+    isInvalid,
+  } = useEdit(grocery)
 
   const handleToggle = async () => {
     try {
@@ -101,12 +124,19 @@ const GroceryItem: React.FC<GroceryItemProps> = ({ grocery }) => {
     <ListItem data-testid={`grocery-item-${grocery.id}`}>
       {editMode ? (
         <>
-          <TextField fullWidth value={state.name} onChange={handleNameChange} />
+          <TextField
+            fullWidth
+            value={state.name}
+            onChange={handleNameChange}
+            error={state.name?.trim() === ''}
+          />
           <TextField
             fullWidth
             type="number"
             value={state.amount}
             onChange={handleAmountChange}
+            error={state.amount < 1}
+            required={true}
           />
         </>
       ) : (
@@ -126,6 +156,7 @@ const GroceryItem: React.FC<GroceryItemProps> = ({ grocery }) => {
         edge="end"
         aria-label={editMode ? 'save' : 'edit'}
         onClick={handleEdit}
+        disabled={editMode && isInvalid}
       >
         {editMode ? <SaveIcon /> : <EditIcon />}
       </IconButton>

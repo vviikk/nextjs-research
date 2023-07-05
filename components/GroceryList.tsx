@@ -1,11 +1,11 @@
 import List from '@mui/material/List'
 import Paper from '@mui/material/Paper'
-import { Container, ListSubheader, Box } from '@mui/material'
-import GroceryItem from '../components/GroceryItem'
-import useGroceryService from '../hooks/useGroceryService'
-import { GroceryLists, Grocery } from '../types'
-import { camelCaseToCapitalized } from '../src/camelCaseToCapitalized'
-import AddGroceryDialog from '../components/AddGroceryDialog'
+import { ListSubheader, Box } from '@mui/material'
+import GroceryItem from '@/components/GroceryItem'
+import useGroceryService from '@/hooks/useGroceryService'
+import { GroceryLists } from '../types'
+import { camelCaseToCapitalized } from '@/src/camelCaseToCapitalized'
+import AddGroceryDialog from '@/components/AddGroceryDialog'
 
 const GroceryList: React.FC = () => {
   const { getGroceryListsQuery } = useGroceryService()

@@ -10,7 +10,7 @@ import {
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { Grocery } from '../types'
-import useGroceryService from '../hooks/useGroceryService'
+import useGroceryService from '@/hooks/useGroceryService'
 
 interface AddGroceryDialogProps {
   onClose?: () => void
@@ -26,6 +26,7 @@ const AddGroceryDialog: React.FC<AddGroceryDialogProps> = ({ onClose }) => {
       const newGrocery: Partial<Grocery> = {
         name: newGroceryName,
         is_purchased: false,
+        amount: 1,
       }
 
       try {
