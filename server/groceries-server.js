@@ -30,7 +30,7 @@ router.post('/api/groceries', (ctx) => {
     return
   }
 
-  const newGrocery = { id: nextId++, name }
+  const newGrocery = { id: nextId++, ...ctx.request.body }
   groceries.push(newGrocery)
 
   ctx.status = 201

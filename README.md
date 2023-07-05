@@ -2,7 +2,7 @@
 
 [![Playwright Tests](https://github.com/vviikk/nextjs-research/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/vviikk/nextjs-research/actions/workflows/playwright.yml)
 
-[Open in CodeSandbox](https://shorturl.at/ARS48)
+[Open in CodeSandbox](https://shorturl.at/ejwQV)
 
 # What is this?
 
@@ -33,7 +33,8 @@ Tech stack:
 - react-query
 - MUI
 - Node
-- Playwright for e2e tests
-- Jest for unit tests
-- supertest for Nodejs tests
+- prettier & prettier-eslint for codestyle
 - Github Actions for CI
+- Playwright for e2e tests, running on CI
+- Jest for unit tests, running on CI
+- supertest for Nodejs tests
