@@ -1,6 +1,6 @@
 import { chromium, Browser, Page, test } from '@playwright/test'
 
-const { describe, beforeAll, afterAll, beforeEach, afterEach } = test
+const { describe, beforeAll, afterAll, beforeEach, afterEach, expect } = test
 
 describe('GroceryApp', () => {
   let browser: Browser
@@ -61,60 +61,88 @@ describe('GroceryApp', () => {
   //   expect(groceryName).toBe('Milk')
   // })
 
-  test('should mark a grocery as purchased', async () => {
+  test('should Create, edit, modify & delete an item', async () => {
+    const groceryName = 'New Grocery Item ' + Date.now()
     // get the test id of the first grocery
-    const firstGroceryTestId = await page.getAttribute(
-      'li:first-child',
+    await page.goto(`http://localhost:${process.env.PORT}/`)
+    await page.getByTestId('add-grocery-button').click()
+    await page.getByLabel('Grocery Name').click()
+    await page.getByLabel('Grocery Name').fill(groceryName)
+    await page.getByTestId('add-button').click()
+
+    // find the test id of the last item in li[data-testid="section-pendingGroceries"]
+    const lastGroceryTestId = await page.getAttribute(
+      'li[data-testid="pendingGroceries"] li:last-child',
       'data-testid'
     )
 
-    // find the checkbox inside the first grocery and click it
-    await page.click(
-      `[data-testid="${firstGroceryTestId}"] input[type="checkbox"]`
-    )
+    // expect checkbox of item is unchecked
+    expect(
+      await page.isChecked(
+        `li[data-testid="${lastGroceryTestId}"] input[type="checkbox"]`
+      )
+    ).toBe(false)
 
-    // Wait for the grocery item's checkbox with that test id to be checked
+    // find the edit button inside the last grocery and click it
+    page
+      .getByTestId(lastGroceryTestId)
+      .getByRole('button', { name: 'edit' })
+      .click()
+    await page.getByRole('textbox').click()
+    await page.getByRole('textbox').fill('A New Item EDITED')
+    await page.getByRole('button', { name: 'save' }).click()
+    await page
+      .getByTestId(lastGroceryTestId)
+      .getByRole('button', { name: 'delete' })
+      .click()
+
+    // wait for the last grocery to be removed
     await page.waitForSelector(
-      `[data-testid="${firstGroceryTestId}"] input[type="checkbox"]:checked`
+      `li[data-testid="section-pendingGroceries"] li[data-testid="${lastGroceryTestId}"]`,
+      { state: 'detached' }
     )
-
-    // Verify that the grocery item is marked as purchased
-    const isChecked = await page.isChecked(
-      `[data-testid="${firstGroceryTestId}"] input[type="checkbox"]`
-    )
-    expect(isChecked).toBe(true)
   })
 
-  test('should edit a grocery name', async () => {
-    // Click the edit button of the second grocery
-    await page.click('li:nth-child(2) button[aria-label="edit"]')
+  test('should toggle the checkbox and move the item to isPurchased & move back when toggled', async () => {
+    const groceryName = 'New Grocery Item ' + Date.now()
+    // get the test id of the first grocery
+    await page.goto(`http://localhost:${process.env.PORT}/`)
+    await page.getByTestId('add-grocery-button').click()
+    await page.getByLabel('Grocery Name').click()
+    await page.getByLabel('Grocery Name').fill(groceryName)
+    await page.getByTestId('add-button').click()
 
-    // Wait for the edit dialog to appear
-    await page.waitForSelector('.edit-dialog')
+    // find the test id of the last item in li[data-testid="section-pendingGroceries"]
+    const lastGroceryTestId = await page.getAttribute(
+      'li[data-testid="pendingGroceries"] li:last-child',
+      'data-testid'
+    )
 
-    // Type the new grocery name in the text field
-    await page.fill('.edit-dialog input', 'Eggs')
+    // expect checkbox of item is unchecked
+    expect(
+      await page.isChecked(
+        `li[data-testid="${lastGroceryTestId}"] input[type="checkbox"]`
+      )
+    ).toBe(false)
 
-    // Click the save button
-    await page.click('.edit-dialog button[aria-label="save"]')
+    // click the checkbox
+    await page.getByTestId(lastGroceryTestId).getByRole('checkbox').click()
 
-    // Wait for the grocery item to be updated
-    await page.waitForSelector('li:nth-child(2) .grocery-item')
+    // expect checkbox of item is checked and item is moved to isPurchased
+    expect(
+      await page.isChecked(
+        `li[data-testid="purchasedGroceries"] li[data-testid="${lastGroceryTestId}"] input[type="checkbox"]`
+      )
+    ).toBe(true)
 
-    // Verify that the grocery item is updated with the new name
-    const groceryName = await page.textContent('li:nth-child(2) .grocery-item')
-    expect(groceryName).toBe('Eggs')
-  })
+    // click the checkbox
+    await page.getByTestId(lastGroceryTestId).getByRole('checkbox').click()
 
-  test('should delete a grocery', async () => {
-    // Click the delete button of the third grocery
-    await page.click('li:nth-child(3) button[aria-label="delete"]')
-
-    // Wait for the grocery item to be removed
-    await page.waitForSelector('li:nth-child(3)', { state: 'detached' })
-
-    // Verify that the grocery item is deleted
-    const groceryItem = await page.$('li:nth-child(3)')
-    expect(groceryItem).toBeNull()
+    // expect checkbox of item is unchecked and item is moved back to pendingGroceries
+    expect(
+      await page.isChecked(
+        `li[data-testid="pendingGroceries"] li[data-testid="${lastGroceryTestId}"] input[type="checkbox"]`
+      )
+    ).toBe(false)
   })
 })

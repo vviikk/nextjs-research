@@ -51,7 +51,7 @@ const GroceryList: React.FC = () => {
           >
             {/* hard coding the categories for ordering */}
             {['pendingGroceries', 'purchasedGroceries'].map((key) => (
-              <li key={`section-${key}`}>
+              <li key={`section-${key}`} data-testid={key}>
                 <ul>
                   <ListSubheader>{`${camelCaseToCapitalized(
                     key

@@ -1,5 +1,7 @@
 # Grocery list
 
+[![Playwright Tests](https://github.com/vviikk/nextjs-research/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/vviikk/nextjs-research/actions/workflows/playwright.yml)
+
 Create an app allowing users to make their grocery lists.
 
 Here are user stories that should be covered:
