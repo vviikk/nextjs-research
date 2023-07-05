@@ -22,9 +22,9 @@ describe('Grocery API', () => {
     const response = await request(serverAddress).get('/api/groceries')
     expect(response.status).toBe(200)
     expect(response.body).toEqual([
-      { id: 1, name: 'Milk' },
-      { id: 2, name: 'Eggs' },
-      { id: 3, name: 'Bread' }
+      { id: 1, name: 'Milk', is_purchased: false, amount: 1 },
+      { id: 2, name: 'Eggs', is_purchased: true, amount: 1 },
+      { id: 3, name: 'Bread', is_purchased: false, amount: 1 },
     ])
   })
 

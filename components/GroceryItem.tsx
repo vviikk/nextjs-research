@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useReducer } from 'react'
 import {
   ListItem,
   ListItemText,
@@ -16,10 +16,69 @@ interface GroceryItemProps {
   grocery: Grocery
 }
 
+type State = {
+  id: number
+  name: string
+  amount: string
+}
+
+type Action =
+  | { type: 'SET_NAME'; payload: string }
+  | { type: 'SET_AMOUNT'; payload: string }
+
+const initialState = (grocery: Grocery): State => ({
+  id: grocery.id,
+  name: grocery.name,
+  amount: grocery.amount.toString(),
+})
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'SET_NAME':
+      return { ...state, name: action.payload }
+    case 'SET_AMOUNT':
+      return { ...state, amount: action.payload }
+    default:
+      return state
+  }
+}
+
+const useEdit = (grocery: Grocery) => {
+  const { updateGroceryMutation } = useGroceryService()
+  const [state, dispatch] = useReducer(reducer, grocery, initialState)
+  const [editMode, setEditMode] = React.useState(false)
+
+  const handleEdit = async () => {
+    if (editMode) {
+      try {
+        await updateGroceryMutation.mutateAsync({
+          id: state.id,
+          name: state.name,
+          amount: parseInt(state.amount),
+        })
+      } catch (error) {
+        console.error('Error updating grocery:', error)
+        // Handle error if necessary
+      }
+    }
+    setEditMode(!editMode)
+  }
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: 'SET_NAME', payload: e.target.value })
+  }
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: 'SET_AMOUNT', payload: e.target.value })
+  }
+
+  return { state, editMode, handleEdit, handleNameChange, handleAmountChange }
+}
+
 const GroceryItem: React.FC<GroceryItemProps> = ({ grocery }) => {
   const { updateGroceryMutation, deleteGroceryMutation } = useGroceryService()
-  const [editMode, setEditMode] = useState(false)
-  const [editedName, setEditedName] = useState(grocery.name)
+  const { state, editMode, handleEdit, handleNameChange, handleAmountChange } =
+    useEdit(grocery)
 
   const handleToggle = async () => {
     try {
@@ -42,34 +101,23 @@ const GroceryItem: React.FC<GroceryItemProps> = ({ grocery }) => {
     }
   }
 
-  const handleEdit = async () => {
-    if (editMode) {
-      try {
-        await updateGroceryMutation.mutateAsync({
-          id: grocery.id,
-          name: editedName,
-        })
-      } catch (error) {
-        console.error('Error updating grocery:', error)
-        // Handle error if necessary
-      }
-    }
-    setEditMode(!editMode)
-  }
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditedName(e.target.value)
-  }
-
   return (
     <ListItem data-testid={`grocery-item-${grocery.id}`}>
       {editMode ? (
-        <TextField fullWidth value={editedName} onChange={handleNameChange} />
+        <>
+          <TextField fullWidth value={state.name} onChange={handleNameChange} />
+          <TextField
+            fullWidth
+            type="number"
+            value={state.amount}
+            onChange={handleAmountChange}
+          />
+        </>
       ) : (
         <>
           <Checkbox checked={grocery.is_purchased} onChange={handleToggle} />
           <ListItemText
-            primary={grocery.name}
+            primary={`${grocery.name} (x ${grocery.amount})`}
             primaryTypographyProps={{
               style: {
                 textDecoration: grocery.is_purchased ? 'line-through' : 'none',

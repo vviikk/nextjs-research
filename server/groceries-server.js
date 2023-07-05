@@ -11,9 +11,9 @@ app.use(bodyParser())
 
 // In-memory storage for groceries
 let groceries = [
-  { id: 1, name: 'Milk' },
-  { id: 2, name: 'Eggs' },
-  { id: 3, name: 'Bread' }
+  { id: 1, name: 'Milk', is_purchased: false, amount: 1 },
+  { id: 2, name: 'Eggs', is_purchased: true, amount: 1 },
+  { id: 3, name: 'Bread', is_purchased: false, amount: 1 },
 ]
 let nextId = 4
 
