@@ -1,10 +1,12 @@
 import { Grocery } from '../types'
 
 class GroceryService {
-  private serverUrl: string = process.env.API_URL || '/api'
+  private serverUrl: string
 
-  constructor(serverUrl: string = '/api') {
+  constructor(serverUrl: string = process.env.API_URL || '/api') {
     this.serverUrl = serverUrl
+
+    console.log('Fetching from ', serverUrl)
 
     // iterate over properties of this class and bind them to the class
     // this is necessary to ensure that `this` is bound correctly when

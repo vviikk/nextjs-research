@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: '16.15.1'
       - run: npm ci
-      - run: npm test
+      - run: npm test:ci
 
       - name: Tests ✅
         if: ${{ success() }}
