@@ -2,6 +2,8 @@ const Koa = require('koa')
 const Router = require('koa-router')
 const bodyParser = require('koa-bodyparser')
 
+const serverPort = process.env.SERVER_PORT || 3001
+
 // Create a new Koa app
 const app = new Koa()
 const router = new Router()
@@ -11,7 +13,7 @@ app.use(bodyParser())
 let groceries = [
   { id: 1, name: 'Milk' },
   { id: 2, name: 'Eggs' },
-  { id: 3, name: 'Bread' },
+  { id: 3, name: 'Bread' }
 ]
 let nextId = 4
 
@@ -56,6 +58,22 @@ router.put('/api/groceries/:id', (ctx) => {
   ctx.body = grocery
 })
 
+router.patch('/api/groceries/:id', (ctx) => {
+  const { id } = ctx.params
+  const grocery = groceries.find((item) => item.id === parseInt(id))
+  if (!grocery) {
+    ctx.status = 404
+    ctx.body = 'Grocery not found'
+    return
+  }
+
+  Object.keys(ctx.request.body).forEach((key) => {
+    grocery[key] = ctx.request.body[key]
+  })
+
+  ctx.body = grocery
+})
+
 router.del('/api/groceries/:id', (ctx) => {
   const { id } = ctx.params
 
@@ -76,9 +94,14 @@ app.use(router.routes())
 app.use(router.allowedMethods())
 
 // Start the server
-const server = (port = 3000) =>
-  app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`)
+app.start = () =>
+  app.listen(serverPort, () => {
+    console.log(`Server running on http://localhost:${serverPort}`)
   })
 
-module.exports = server
+// Check if --start was passed
+if (process.argv[2] === '--start') {
+  app.start()
+}
+
+module.exports = app

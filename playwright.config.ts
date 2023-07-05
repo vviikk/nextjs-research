@@ -70,7 +70,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run e2e:server',
+    command: 'PORT=3050 SERVER_PORT=3051 npm run e2e:server',
     url: `http://127.0.0.1:${process.env.PORT}`,
     reuseExistingServer: !process.env.CI,
   },

@@ -3,6 +3,7 @@
 [![Playwright Tests](https://github.com/vviikk/nextjs-research/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/vviikk/nextjs-research/actions/workflows/playwright.yml)
 
 # What is this?
+
 An example app allowing users to make their grocery lists.
 
 Here are user stories that should be covered:
@@ -13,9 +14,12 @@ Here are user stories that should be covered:
 - As a user, I can mark an item as bought. This will cross out the title and mark the checkbox as checked.
 
 Tech stack:
+
 - NextJS
 - react-query
 - MUI
 - Node
 - Playwright for e2e tests
 - Jest for unit tests
+- supertest for Nodejs tests
+- Github Actions for CI

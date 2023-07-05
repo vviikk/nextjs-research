@@ -6,7 +6,9 @@ describe('Grocery API', () => {
   let serverAddress
 
   beforeAll((done) => {
-    server = app(0)
+    server = app.listen(0, () => {
+      console.log(`Test server listening on port ${server.address().port}`)
+    })
     const { port } = server.address()
     serverAddress = `http://localhost:${port}`
     done()
