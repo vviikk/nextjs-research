@@ -16,6 +16,10 @@ $ npm run dev # starts the dev server
 # or
 $ npm run build # builds the app
 $ npm run start # starts the app
+
+# running tests
+$ npm test # runs jest
+$ npm test:e2e # runs end to end tests using playwright
 ```
 
 An example app allowing users to make their grocery lists.
