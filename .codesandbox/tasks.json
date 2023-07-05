@@ -1,0 +1,66 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [
+    {
+      "name": "Install Dependencies",
+      "command": "npm install"
+    }
+  ],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "dev": {
+      "name": "dev",
+      "command": "npm run dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 3000
+      }
+    },
+    "build": {
+      "name": "build",
+      "command": "npm run build",
+      "runAtStart": false
+    },
+    "export-port": {
+      "name": "export-port",
+      "command": "npm run export-port",
+      "runAtStart": false
+    },
+    "start": {
+      "name": "start",
+      "command": "npm run start",
+      "runAtStart": false
+    },
+    "lint": {
+      "name": "lint",
+      "command": "npm run lint",
+      "runAtStart": false
+    },
+    "test": {
+      "name": "test",
+      "command": "npm run test",
+      "runAtStart": false
+    },
+    "test:ci": {
+      "name": "test:ci",
+      "command": "npm run test:ci",
+      "runAtStart": false
+    },
+    "test:e2e": {
+      "name": "test:e2e",
+      "command": "npm run test:e2e",
+      "runAtStart": false
+    },
+    "e2e:server": {
+      "name": "e2e:server",
+      "command": "npm run e2e:server",
+      "runAtStart": false
+    },
+    "post-update": {
+      "name": "post-update",
+      "command": "npm run post-update",
+      "runAtStart": false
+    }
+  }
+}
