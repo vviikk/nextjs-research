@@ -2,7 +2,12 @@
 
 [![Playwright Tests](https://github.com/vviikk/nextjs-research/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/vviikk/nextjs-research/actions/workflows/playwright.yml)
 
+<!-- center the following text -->
+<p align="center">
+
 [Open in CodeSandbox](https://shorturl.at/ejwQV)
+[Hosted on Render](https://piggy-nextjs.onrender.com/)
+</p>
 
 # What is this?
 
