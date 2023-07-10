@@ -19,80 +19,81 @@ const commentsService = postsService.getNestedService(':postId/comments');
 console.log(commentsService.buildUrl()); // Output: 'http://localhost/api/posts/:postId/comments'
 
 ```
+enum RequestMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE',
+}
+
 interface BaseServiceOptions {
-  baseURL: string
+  baseURL: string;
+  slug?: string;
 }
 
 class BaseService {
-  private baseURL: string = process.env.BASE_URL || ''
-  private headers: Record<string, string>
+  private baseURL: string;
+  private slug: string;
+  private headers: Record<string, string>;
 
   constructor(options: BaseServiceOptions) {
-    this.baseURL = options.baseURL
+    this.baseURL = options.baseURL;
+    this.slug = options.slug || '';
     this.headers = {
       'Content-Type': 'application/json',
-    }
-
-    // You can set additional headers if needed
-    // this.headers['Authorization'] = 'Bearer <your-token>'
+    };
 
     // Bind all methods to the instance to preserve the correct context of `this`
     Object.getOwnPropertyNames(BaseService.prototype)
       .filter((key) => typeof this[key as keyof BaseService] === 'function')
       .forEach((key) => {
-        this[key as keyof BaseService] = (
-          this[key as keyof BaseService] as Function
-        ).bind(this)
-      })
+        this[key as keyof BaseService] = (this[key as keyof BaseService] as Function).bind(this);
+      });
   }
 
-  private buildUrl(endpoint: string): string {
-    return `${this.baseURL}${endpoint}`
+  private buildUrl(endpoint?: string): string {
+    return `${this.baseURL}${this.slug}${endpoint || ''}`;
   }
 
-  private async request<T>(
-    method: string,
-    endpoint: string,
-    body?: any
-  ): Promise<T> {
-    const url = this.buildUrl(endpoint)
+  private async request<T>(method: RequestMethod, endpoint?: string, body?: any): Promise<T> {
+    const url = this.buildUrl(endpoint);
 
     const options: RequestInit = {
       method,
       headers: this.headers,
       body: JSON.stringify(body),
-    }
+    };
 
-    const response = await fetch(url, options)
+    const response = await fetch(url, options);
 
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`)
+      throw new Error(`Request failed with status ${response.status}`);
     }
 
-    const data: T = await response.json()
-    return data
+    const data: T = await response.json();
+    return data;
   }
 
-  public async get<T>(endpoint: string): Promise<T> {
-    return this.request<T>('GET', endpoint)
+  public async get<T>(): Promise<T> {
+    return this.request<T>(RequestMethod.GET);
   }
 
-  public async post<T>(endpoint: string, body?: any): Promise<T> {
-    return this.request<T>('POST', endpoint, body)
+  public async post<T>(body?: any): Promise<T> {
+    return this.request<T>(RequestMethod.POST, undefined, body);
   }
 
-  public async patch<T>(endpoint: string, body?: any): Promise<T> {
-    return this.request<T>('PATCH', endpoint, body)
+  public async patch<T>(body?: Partial<T>): Promise<T> {
+    return this.request<T>(RequestMethod.PATCH, undefined, body);
   }
 
-  public async delete<T>(endpoint: string): Promise<T> {
-    return this.request<T>('DELETE', endpoint)
+  public async delete<T>(): Promise<T> {
+    return this.request<T>(RequestMethod.DELETE);
   }
 
   public getNestedService(nestedEndpoint: string): BaseService {
-    const nestedURL = `${this.buildUrl()}/${nestedEndpoint}`
-    return new BaseService({ baseURL: nestedURL })
+    const nestedSlug = this.slug ? `${this.slug}/${nestedEndpoint}` : nestedEndpoint;
+    return new BaseService({ baseURL: this.baseURL, slug: nestedSlug });
   }
 }
 
-export default BaseService
+export { BaseService, RequestMethod };
